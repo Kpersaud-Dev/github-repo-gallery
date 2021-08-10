@@ -2,7 +2,9 @@
 const overview = document.querySelector('.overview'),
       repoList = document.querySelector('.repo-list'),
       repos = document.querySelector('.repos'),
-      repoData = document.querySelector('.repo-data');
+      repoData = document.querySelector('.repo-data'),
+      viewReposBtn = document.querySelector('.view-repos'),
+      filterInput = document.querySelector('.filter-repos');
 
 // GitHub Username
 const username = 'kpersaud-dev';
@@ -58,6 +60,8 @@ const fetchRepos = async () => {
 // Display Repo Information
 
 const displayRepos = repos => {
+  // Show Filter Input Element
+  filterInput.classList.remove('hide');
   // For Each Repo, create list item and append
   for(let repo of repos) {
     const li = document.createElement('li');
@@ -101,6 +105,8 @@ const getRepoInfo = async repoName => {
 
 // Display Specific Repo Information
 const displayRepoInfo = (repoInfo, languages) => {
+  
+  // Empty repo-data element
   repoData.innerHTML = "";
   // Unhide repo-data element
   repoData.classList.remove('hide');
@@ -118,5 +124,33 @@ const displayRepoInfo = (repoInfo, languages) => {
   `;
   // Append Repo Div
   repoData.append(newRepo);
-  
+
+  // Show Back to Repo Gallery Button
+  viewReposBtn.classList.remove('hide');
 }
+
+// Back to Repo Gallery Button Event Listener
+viewReposBtn.addEventListener('click', () => {
+  repos.classList.remove('hide');
+  repoData.classList.add('hide');
+  viewReposBtn.classList.add('hide');
+});
+
+// Event Listener For Search Input
+filterInput.addEventListener('input', e => {
+  // Capture Input value
+  const searchValue = e.target.value;
+  // Variable to select all elements with class of repo
+  const repos = document.querySelectorAll('.repo');
+  // Assign variable to lowercase value of search text
+  const lowerSearch = searchValue.toLowerCase();
+  // Loop through repos in "repos" element
+  for(let repo of repos) {
+    const repoText = repo.innerText.toLowerCase();
+    if(repoText.includes(lowerSearch)) {
+      repo.classList.remove('hide');
+    } else {
+      repo.classList.add('hide');
+    }
+  }
+})
